@@ -5,12 +5,6 @@ const TICKET_TYPE_ID = 12345;
 const TICKET_FORM_ID = 67890;
 const REQUESTOR_UID = "00000000-0000-0000-0000-000000000000"; 
 
-interface TdxApplication {
-    ID: number;
-    Name: string;
-    ApplicationTypeName: string;
-}
-
 async function getAuthToken(ssoPayload?: Record<string, unknown>) {
     
     const myTemporaryToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6InJrYW5paGFuQHB1cmR1ZS5lZHUiLCJ0ZHhfZW50aXR5IjoiMiIsInRkeF9wYXJ0aXRpb24iOiIzMDU3IiwibmJmIjoxNzcyNjgxMDIwLCJleHAiOjE3NzI3Njc0MjAsImlhdCI6MTc3MjY4MTAyMCwiaXNzIjoiVEQiLCJhdWQiOiJodHRwczovL3d3dy50ZWFtZHluYW1peC5jb20vIn0._yLg41ZK6hQNlmvCxF2M23ZcCAjVDSk5vu-rD4sWacc"; 
@@ -27,7 +21,7 @@ async function getAuthToken(ssoPayload?: Record<string, unknown>) {
     if (!res.ok) throw new Error('Failed to authenticate with TeamDynamix SSO');
     return res.text();
     */
-    
+   
 }
 
 async function fetchTdx(endpoint: string, method: string, body?: Record<string, unknown>, ssoPayload?: Record<string, unknown>) {
@@ -57,7 +51,7 @@ export async function getArticlesDueForReview(ssoPayload?: Record<string, unknow
         sixtyDaysFromNow.setDate(sixtyDaysFromNow.getDate() + 60);
 
         const searchPayload = {
-            StatusID: 1, // 1 is typically "Approved" in TDX
+            StatusID: 1, 
             NextReviewDateTo: sixtyDaysFromNow.toISOString()
         };
 
@@ -102,7 +96,7 @@ export async function initiateKbReview(articleIds: string[]) {
     }
 }
 
-export async function findMyAppIds(ssoPayload?: any) {
+export async function findMyAppIds(ssoPayload?: Record<string, unknown>) {
     try {
         const apps = await fetchTdx('/applications', 'GET', undefined, ssoPayload);
         
