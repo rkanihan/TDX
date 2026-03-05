@@ -1,42 +1,54 @@
-# sv
+# TeamDynamix KB Automation Dashboard
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+## Overview
+A web application built to streamline and automate the annual Knowledge Base (KB) review process within the Purdue University TeamDynamix (TDX) environment. 
 
-## Creating a project
+This tool pulls active KB articles that are approaching their review dates and automatically generates the necessary tracking infrastructure in TeamDynamix, mimicking the current manual workflow.
 
-If you're seeing this, you've probably already done this step. Congrats!
+## Current Features (MVP)
+* **Automated Data Retrieval:** Securely queries the Purdue TDX API (App ID 10) to fetch "Approved" KB articles with a `NextReviewDate` occurring within the next 30 days.
+* **Batch Ticket Generation:** Creates a primary Parent Ticket (e.g., "Annual KB Review - 2026") to group the review workload.
+* **Child Task Automation:** Iterates through selected articles and automatically generates individual review tasks attached to the Parent Ticket.
 
-```sh
-# create a new project
-npx sv create my-app
+## Tech Stack
+* **Framework:** SvelteKit
+* **Language:** TypeScript / HTML / CSS
+* **Backend:** Node.js (via SvelteKit Server Routes)
+* **Integration:** TeamDynamix REST API
+
+## Local Development Setup
+
+### 1. Prerequisites
+* Node.js installed on your local machine.
+* An active TeamDynamix browser token (for local testing) or a TDX Web Services Key (Client ID/Secret) for production.
+
+### 2. Installation
+Clone the repository and install the required dependencies:
+```bash
+git clone [https://github.com/rkanihan/TDX.git](https://github.com/rkanihan/TDX.git)
+cd TDX
+npm install
 ```
 
-To recreate this project with the same configuration:
+### 3. Authentication Configuration (Local Dev)
+Currently, the application uses a manual browser token for local development. 
+1. Log into `https://service.purdue.edu`.
+2. Navigate to `https://service.purdue.edu/TDWebApi/api/auth/loginsso` to retrieve your active bearer token.
+3. Open `src/lib/server/tdx.ts` and paste the token into the `getAuthToken()` function. *(Note: This token expires periodically and will need to be refreshed during development).*
 
-```sh
-# recreate this project
-pnpm dlx sv@0.12.5 create --template minimal --types ts --add prettier eslint mcp="ide:vscode+setup:remote" --install pnpm ./
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```sh
+### 4. Running the App
+Start the SvelteKit development server:
+```bash
 npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
 ```
+Navigate to `http://localhost:5173` in your browser to view the dashboard.
 
-## Building
+## Project Structure
+* `src/routes/+page.svelte`: The frontend UI and dashboard displaying the articles pending review.
+* `src/routes/+page.server.ts`: The backend server actions that securely intercept frontend form submissions and trigger the TDX workflows.
+* `src/lib/server/tdx.ts`: The core TeamDynamix API utility file handling authentication, payload construction, and fetching.
 
-To create a production version of your app:
-
-```sh
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+## Roadmap & Next Steps
+* **Production Authentication:** Transition from manual browser tokens to a dedicated TDX Web Services Key (`/auth/loginadmin`) for seamless, background authentication.
+* **Dynamic Configuration:** Move hardcoded TDX internal IDs (Ticket Type ID, Form ID, Status IDs) into a `.env` file for easier environment swapping.
+* **Automated Approvals:** Add a secondary workflow to mark TDX tasks as complete, approve KB drafts, and automatically push the `NextReviewDate` forward by one year.
