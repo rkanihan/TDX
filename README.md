@@ -25,7 +25,7 @@ This tool pulls active KB articles that are approaching their review dates and a
 ### 2. Installation
 Clone the repository and install the required dependencies:
 ```bash
-git clone [https://github.com/rkanihan/TDX.git](https://github.com/rkanihan/TDX.git)
+git clone https://github.com/rkanihan/TDX.git
 cd TDX
 npm install
 ```
