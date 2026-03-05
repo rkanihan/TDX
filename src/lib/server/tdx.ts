@@ -1,15 +1,15 @@
 const TDX_API_BASE_URL = "https://service.purdue.edu/TDWebApi/api";
 
 
-const TICKET_TYPE_ID = 12345; 
-const TICKET_FORM_ID = 67890;
-const REQUESTOR_UID = "00000000-0000-0000-0000-000000000000"; 
+const TICKET_TYPE_ID = 0; 
+const TICKET_FORM_ID = 0;
+const REQUESTOR_UID = "0"; 
 
 async function getAuthToken(ssoPayload?: Record<string, unknown>) {
+
+    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6InJrYW5paGFuQHB1cmR1ZS5lZHUiLCJ0ZHhfZW50aXR5IjoiMiIsInRkeF9wYXJ0aXRpb24iOiIzMDU3IiwibmJmIjoxNzcyNjgxMDIwLCJleHAiOjE3NzI3Njc0MjAsImlhdCI6MTc3MjY4MTAyMCwiaXNzIjoiVEQiLCJhdWQiOiJodHRwczovL3d3dy50ZWFtZHluYW1peC5jb20vIn0._yLg41ZK6hQNlmvCxF2M23ZcCAjVDSk5vu-rD4sWacc"; 
     
-    const myTemporaryToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6InJrYW5paGFuQHB1cmR1ZS5lZHUiLCJ0ZHhfZW50aXR5IjoiMiIsInRkeF9wYXJ0aXRpb24iOiIzMDU3IiwibmJmIjoxNzcyNjgxMDIwLCJleHAiOjE3NzI3Njc0MjAsImlhdCI6MTc3MjY4MTAyMCwiaXNzIjoiVEQiLCJhdWQiOiJodHRwczovL3d3dy50ZWFtZHluYW1peC5jb20vIn0._yLg41ZK6hQNlmvCxF2M23ZcCAjVDSk5vu-rD4sWacc"; 
-    
-    return myTemporaryToken;
+    return token;
 
     /*
     const res = await fetch(`${TDX_API_BASE_URL}/auth/loginsso`, {
@@ -51,11 +51,30 @@ export async function getArticlesDueForReview(ssoPayload?: Record<string, unknow
         sixtyDaysFromNow.setDate(sixtyDaysFromNow.getDate() + 60);
 
         const searchPayload = {
-            StatusID: 1, 
-            NextReviewDateTo: sixtyDaysFromNow.toISOString()
+            Status: 3, 
+            ReviewDateUtc: sixtyDaysFromNow.toISOString()
         };
 
         const results = await fetchTdx('/knowledgebase/search', 'POST', searchPayload, ssoPayload);
+
+        console.log("\n--- RAW KB ARTICLE DATA ---");
+        if (Array.isArray(results)) {
+            const Article = results.find(article => {
+                return article.ID == 2133 && article.OwningGroupName == 'IT_CSS_PWL_ADMIN_SUPPORT';
+            });
+            
+            if (Article) {
+                console.log(Article);
+            } else {
+                console.log("Knowledge Base article not found in the list.");
+            }
+        }
+        console.log("--------------------------------\n");
+
+
+
+
+
         return results || [];
     } catch (error) {
         console.error("Error fetching articles:", error);
@@ -102,7 +121,7 @@ export async function findMyAppIds(ssoPayload?: Record<string, unknown>) {
         
         console.log("\n--- RAW TEAMDYNAMIX APP DATA ---");
         if (Array.isArray(apps)) {
-            const App = apps.find(app => app.Name === 'Knowledge Base');
+            const App = apps.find(app => app.AppClass == 'TDNext');
             
             if (App) {
                 console.log(App);

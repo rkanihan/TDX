@@ -25,8 +25,8 @@
                 {#each data.articles as article (article.ID)}
                     <label style="display: block; margin-bottom: 0.5rem;">
                         <input type="checkbox" name="articleIds" value={article.ID} checked /> 
-                        <strong>ID {article.ID}:</strong> {article.Title} 
-                        <em>(Due: {new Date(article.NextReviewDate).toLocaleDateString()})</em>
+                        <strong>ID {article.ID}:</strong> {article.Subject} 
+                        <em>(Due: {new Date(article.ReviewDateUtc).toLocaleDateString()})</em>
                     </label>
                 {/each}
             </div>
