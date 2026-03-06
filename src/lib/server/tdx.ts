@@ -7,7 +7,7 @@ const REQUESTOR_UID = "0";
 
 async function getAuthToken(ssoPayload?: Record<string, unknown>) {
 
-    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6InJrYW5paGFuQHB1cmR1ZS5lZHUiLCJ0ZHhfZW50aXR5IjoiMiIsInRkeF9wYXJ0aXRpb24iOiIzMDU3IiwibmJmIjoxNzcyNjgxMDIwLCJleHAiOjE3NzI3Njc0MjAsImlhdCI6MTc3MjY4MTAyMCwiaXNzIjoiVEQiLCJhdWQiOiJodHRwczovL3d3dy50ZWFtZHluYW1peC5jb20vIn0._yLg41ZK6hQNlmvCxF2M23ZcCAjVDSk5vu-rD4sWacc"; 
+    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6InJrYW5paGFuQHB1cmR1ZS5lZHUiLCJ0ZHhfZW50aXR5IjoiMiIsInRkeF9wYXJ0aXRpb24iOiIzMDU3IiwibmJmIjoxNzcyODExNjExLCJleHAiOjE3NzI4OTgwMTEsImlhdCI6MTc3MjgxMTYxMSwiaXNzIjoiVEQiLCJhdWQiOiJodHRwczovL3d3dy50ZWFtZHluYW1peC5jb20vIn0.dsdMDZAMP0oe_HjFjgvncvB-jYrKGAKt1qKTXD8lqGQ"; 
     
     return token;
 
@@ -47,20 +47,22 @@ async function fetchTdx(endpoint: string, method: string, body?: Record<string, 
 
 export async function getArticlesDueForReview(ssoPayload?: Record<string, unknown>) {
     try {
-        const sixtyDaysFromNow = new Date();
-        sixtyDaysFromNow.setDate(sixtyDaysFromNow.getDate() + 60);
-
-        const searchPayload = {
-            Status: 3, 
-            ReviewDateUtc: sixtyDaysFromNow.toISOString()
+        const searchPayload = { 
+            IncludeArticleBodies: false,
+            IncludeShortcuts: false,
+            SearchText: "IT_CSS_PWL_ADMIN_SUPPORT",
         };
 
         const results = await fetchTdx('/knowledgebase/search', 'POST', searchPayload, ssoPayload);
 
+        console.log("\n--- RESULTS ---");
+        console.log(results);
+        console.log("----------------------\n");
+
         console.log("\n--- RAW KB ARTICLE DATA ---");
         if (Array.isArray(results)) {
             const Article = results.find(article => {
-                return article.ID == 2133 && article.OwningGroupName == 'IT_CSS_PWL_ADMIN_SUPPORT';
+                return article.ID !== null && article.OwningGroupName !== null && article.Status == 3;
             });
             
             if (Article) {
@@ -71,11 +73,13 @@ export async function getArticlesDueForReview(ssoPayload?: Record<string, unknow
         }
         console.log("--------------------------------\n");
 
+        const prunedResults = await pruneArticles(results);
 
+        console.log("\n--- PRUNED RESULTS ---");
+        console.log(prunedResults);
+        console.log("----------------------\n");
 
-
-
-        return results || [];
+        return prunedResults || [];
     } catch (error) {
         console.error("Error fetching articles:", error);
         return [];
@@ -135,4 +139,14 @@ export async function findMyAppIds(ssoPayload?: Record<string, unknown>) {
     } catch (error) {
         console.error("Error fetching applications:", error);
     }
+}
+
+export async function pruneArticles(articles: Record<string, unknown>[]) {
+    const sixtyDaysFromNow = new Date();
+    sixtyDaysFromNow.setDate(sixtyDaysFromNow.getDate() + 60);
+    
+    return articles.filter(article => {
+        const reviewDate = new Date(article.ReviewDateUtc as string);
+        return reviewDate < sixtyDaysFromNow;
+    });
 }

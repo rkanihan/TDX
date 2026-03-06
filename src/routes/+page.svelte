@@ -26,7 +26,7 @@
                     <label style="display: block; margin-bottom: 0.5rem;">
                         <input type="checkbox" name="articleIds" value={article.ID} checked /> 
                         <strong>ID {article.ID}:</strong> {article.Subject} 
-                        <em>(Due: {new Date(article.ReviewDateUtc).toLocaleDateString()})</em>
+                        <em>(Due: {new Date(article.ReviewDateUtc as string).toLocaleDateString()})</em>
                     </label>
                 {/each}
             </div>
