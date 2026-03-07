@@ -6,8 +6,8 @@ A web application built to streamline and automate the annual Knowledge Base (KB
 This tool pulls active KB articles that are approaching their review dates and automatically generates the necessary tracking infrastructure in TeamDynamix, mimicking the current manual workflow.
 
 ## Current Features (MVP)
-* **Automated Data Retrieval:** Securely queries the Purdue TDX API (App ID 10) to fetch "Approved" KB articles with a `NextReviewDate` occurring within the next 30 days.
-* **Batch Ticket Generation:** Creates a primary Parent Ticket (e.g., "Annual KB Review - 2026") to group the review workload.
+* **Automated Data Retrieval:** Queries the Purdue TDX API to fetch "Approved" KB articles with a `ReviewDateUtc` occurring within the next 60 days.
+* **Batch Ticket Generation:** Creates a primary Parent Ticket (e.g., "Bimonthly KB Review") to group the review workload.
 * **Child Task Automation:** Iterates through selected articles and automatically generates individual review tasks attached to the Parent Ticket.
 
 ## Tech Stack
@@ -27,7 +27,7 @@ Clone the repository and install the required dependencies:
 ```bash
 git clone https://github.com/rkanihan/TDX.git
 cd TDX
-npm install
+pnpm install
 ```
 
 ### 3. Authentication Configuration (Local Dev)
@@ -39,7 +39,7 @@ Currently, the application uses a manual browser token for local development.
 ### 4. Running the App
 Start the SvelteKit development server:
 ```bash
-npm run dev
+pnpm run dev
 ```
 Navigate to `http://localhost:5173` in your browser to view the dashboard.
 
