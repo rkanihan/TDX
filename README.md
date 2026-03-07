@@ -7,7 +7,7 @@ This tool pulls active KB articles that are approaching their review dates and a
 
 ## Current Features (MVP)
 * **Automated Data Retrieval:** Queries the Purdue TDX API to fetch "Approved" KB articles with a `ReviewDateUtc` occurring within the next 60 days.
-* **Batch Ticket Generation:** Creates a primary Parent Ticket (e.g., "Annual KB Review - 2026") to group the review workload.
+* **Batch Ticket Generation:** Creates a primary Parent Ticket (e.g., "Bimonthly KB Review") to group the review workload.
 * **Child Task Automation:** Iterates through selected articles and automatically generates individual review tasks attached to the Parent Ticket.
 
 ## Tech Stack
