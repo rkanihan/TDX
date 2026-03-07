@@ -1,11 +1,19 @@
 <script lang="ts">
+    import { onMount } from 'svelte';
     import type { PageData, ActionData } from './$types';
     import { enhance } from '$app/forms';
+    import { fly } from 'svelte/transition';
 
     export let data: PageData;
     export let form: ActionData;
 
     let isSubmitting = false;
+
+    let mounted = false;
+
+    onMount(() => {
+        mounted = true;
+    });
 
     function formatReadableDate(utcString: string) {
         const date = new Date(utcString);
@@ -99,23 +107,32 @@
                 </div>
             {:else}
                 <div class="article-grid">
-                    {#each data.articles as article (article.ID)}
-                        <label class="article-card">
-                            <input type="checkbox" name="articleIds" value={article.ID} checked /> 
-                            <div class="card-inner">
-                                <div class="card-header">
-                                    <span class="article-id">ID {article.ID}</span>
-                                    <span class="due-date">Due: {formatReadableDate(article.ReviewDateUtc as string)}</span>
+                    
+                    {#if mounted}
+                        {#each data.articles as article, i (article.ID)}
+                            
+                            <label 
+                                class="article-card"
+                                in:fly|global={{ y: 50, duration: 600, delay: i * 50 }} 
+                            >
+                                <input type="checkbox" name="articleIds" value={article.ID} checked /> 
+                                <div class="card-inner">
+                                    <div class="card-header">
+                                        <span class="article-id">ID {article.ID}</span>
+                                        <span class="due-date">Due: {formatReadableDate(article.ReviewDateUtc as string)}</span>
+                                    </div>
+                                    <h3 class="article-title">{article.Subject}</h3>
+                                    <div class="custom-checkbox">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                    </div>
                                 </div>
-                                <h3 class="article-title">{article.Subject}</h3>
-                                <div class="custom-checkbox">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                                        <polyline points="20 6 9 17 4 12"></polyline>
-                                    </svg>
-                                </div>
-                            </div>
-                        </label>
-                    {/each}
+                            </label>
+                            
+                        {/each}
+                    {/if}
+                    
                 </div>
             {/if}
         </main>
