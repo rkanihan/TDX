@@ -1,3 +1,5 @@
+import { TDX_AUTH_TOKEN } from '$env/static/private';
+
 const TDX_API_BASE_URL = "https://service.purdue.edu/TDWebApi/api";
 const TICKET_TYPE_ID = 8;
 const TICKET_FORM_ID = 6;
@@ -13,10 +15,7 @@ const EndDate = new Date(new Date().setDate(new Date().getDate() + 60)).toISOStr
 
 
 async function getAuthToken() {
-
-    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6InJrYW5paGFuQHB1cmR1ZS5lZHUiLCJ0ZHhfZW50aXR5IjoiMiIsInRkeF9wYXJ0aXRpb24iOiIzMDU3IiwibmJmIjoxNzcyOTAwNjE5LCJleHAiOjE3NzI5ODcwMTksImlhdCI6MTc3MjkwMDYxOSwiaXNzIjoiVEQiLCJhdWQiOiJodHRwczovL3d3dy50ZWFtZHluYW1peC5jb20vIn0.GueCUbpjGlE47yYhCNHT3lmG1cirwrnSsEj-CnILe_I"; 
-    
-    return token;
+    return TDX_AUTH_TOKEN;
 }
 
 async function fetchTdx(endpoint: string, method: string, body?: Record<string, unknown>) {
