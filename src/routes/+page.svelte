@@ -25,6 +25,10 @@
     }
 </script>
 
+<svelte:head>
+    <title>TDX KB Automation Dashboard</title>
+</svelte:head>
+
 <div class="dashboard-container">
     <div class="diagonal-bg-container">
         <div class="glow top-glow"></div>
@@ -42,12 +46,12 @@
     <header class="hero">
         <div class="header-left">
             <div class="header-content">
-            <div class="title-wrapper">
-                <div class="title-accent-line"></div>
-                <h1>TDX KB Automation</h1>
+                <div class="title-wrapper">
+                    <div class="title-accent-line"></div>
+                    <h1>TDX KB Automation</h1>
+                </div>
+                <p>Generate parent tickets and review tasks for articles with upcoming deadlines.</p>
             </div>
-            <p>Generate parent tickets and review tasks for articles with upcoming deadlines.</p>
-        </div>
             <div class="status-badge {form?.success ? 'success pulse' : form?.message ? 'error' : ''}">
                 <div class="dot"></div>
                 {#if form?.success}
@@ -86,9 +90,9 @@
     </header>
 
     {#if form?.success}
-        <div class="toast success-toast">{form.message}</div>
+        <div class="toast success-toast" role="status">{form.message}</div>
     {:else if form?.message}
-        <div class="toast error-toast">{form.message}</div>
+        <div class="toast error-toast" role="alert">{form.message}</div>
     {/if}
 
     <form method="POST" action="?/startReview" class="automation-form" use:enhance={() => {
@@ -177,7 +181,7 @@
         --accent: #CEB888; /* Gold */
         --accent-glow: rgba(206, 184, 136, 0.15);
         --text-primary: #F8FAFC;
-        --text-secondary: #94A3B8;
+        --text-secondary: #A1B0C0;
         --border: #2A3241;
         --success: #10B981;
         --error: #EF4444;
@@ -244,7 +248,7 @@
         transition: transform 0.3s ease;
     }
 
-    .icon-link:hover {
+    .icon-link:hover, .icon-link:focus-visible {
         color: var(--accent);
         border-color: var(--accent);
         background: rgba(206, 184, 136, 0.1);
@@ -252,7 +256,7 @@
         box-shadow: 0 8px 16px var(--accent-glow);
     }
 
-    .icon-link:hover svg {
+    .icon-link:hover svg, .icon-link:focus-visible svg {
         transform: scale(1.1);
     }
 
@@ -277,7 +281,7 @@
         z-index: 10;
     }
 
-    .icon-link:hover::after {
+    .icon-link:hover::after, .icon-link:focus-visible::after {
         opacity: 1;
         transform: translateX(-50%) translateY(0);
     }
@@ -419,6 +423,11 @@
         box-shadow: 0 0 20px var(--accent-glow);
     }
 
+    .article-card input[type="checkbox"]:focus-visible + .card-inner {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+    }
+
     .custom-checkbox {
         position: absolute;
         bottom: 1.5rem;
@@ -426,7 +435,7 @@
         width: 24px;
         height: 24px;
         border-radius: 6px;
-        border: 2px solid var(--border);
+        border: 2px solid #475569;
         display: flex;
         align-items: center;
         justify-content: center;
