@@ -1,4 +1,4 @@
-lockfileVersion: '9.0'
+lockfileVersion: '10.0'
 
 settings:
   autoInstallPeers: true
@@ -1039,7 +1039,7 @@ packages:
 
   svelte-eslint-parser@1.5.1:
     resolution: {integrity: sha512-UbY7DYoDg+x4AKLUcX5xWuEWylgmm8ZD2Z89YT/AK6Wm/ckeMTnOMwr6AVC99znXbRC26xzWEPhSgmB62E07Gg==}
-    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0, pnpm: 10.30.2}
+    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0, pnpm: 10.32.1}
     peerDependencies:
       svelte: ^3.37.0 || ^4.0.0 || ^5.0.0
     peerDependenciesMeta:

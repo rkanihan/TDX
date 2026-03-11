@@ -4,6 +4,8 @@ pnpm-lock.yaml
 yarn.lock
 bun.lock
 bun.lockb
+LICENSE
+README.md
 
 # Miscellaneous
 /static/
