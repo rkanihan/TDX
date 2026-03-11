@@ -11,7 +11,7 @@ export const load: PageServerLoad = async () => {
 }
 
 export const actions: Actions = {
-    startReview: async ({ request }) => {
+    startReview: async ({ request }: { request: Request }) => {
         const data = await request.formData();
         const articles = data.getAll('articleIds') as string[];
         const requestorUsername = data.get('requestorUsername') as string;
