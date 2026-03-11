@@ -1,5 +1,12 @@
 import { TDX_AUTH_TOKEN } from '$env/static/private';
 
+export interface Article {
+    ID: number;
+    Subject: string;
+    ReviewDateUtc: string;
+    OwningGroupName: string;
+}
+
 const TDX_API_BASE_URL = "https://service.purdue.edu/TDWebApi/api";
 const TICKET_TYPE_ID = 8;
 const TICKET_FORM_ID = 6;
@@ -39,7 +46,7 @@ async function fetchTdx(endpoint: string, method: string, body?: Record<string, 
     return text ? JSON.parse(text) : null;
 }
 
-export async function getArticlesDueForReview() {
+export async function getArticlesDueForReview(): Promise<Article[]> {
     try {
         const searchPayload = { 
             Status: 3,
@@ -143,7 +150,7 @@ export async function findMyAppIds() {
     }
 }
 
-export async function pruneArticles(articles: Record<string, unknown>[]) {
+export async function pruneArticles(articles: Record<string, unknown>[]): Promise<Article[]> {
     const sixtyDaysFromNow = new Date();
     sixtyDaysFromNow.setDate(sixtyDaysFromNow.getDate() + 60);
 
@@ -174,7 +181,7 @@ export async function pruneArticles(articles: Record<string, unknown>[]) {
             return (a.ID as number) - (b.ID as number);
         }
         return dateA - dateB;
-    });
+    }) as unknown as Article[];
 }
 
 export async function getGUIDFromUsername(username: string) {
