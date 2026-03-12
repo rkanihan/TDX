@@ -326,19 +326,7 @@
 		border-left: 2px solid var(--text-primary);
 
 	}
-/*
-	.ledger-header {
-		display: grid;
-		grid-template-columns: 60px 100px 1fr 140px;
-		gap: 2rem;
-		padding: 1rem 0;
-		border-bottom: 1px solid var(--border-light);
-		font-size: 0.75rem;
-		font-weight: 700;
-		letter-spacing: 0.1em;
-		color: var(--text-secondary);
-	}
-*/
+
     .ledger-body {
 		display: grid;
 		grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
