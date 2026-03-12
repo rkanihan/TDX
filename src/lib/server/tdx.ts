@@ -8,6 +8,7 @@ export interface Article {
 }
 
 const TDX_API_BASE_URL = "https://service.purdue.edu/TDWebApi/api";
+const TICKET_APP_ID = 33;
 const TICKET_TYPE_ID = 8;
 const TICKET_FORM_ID = 6;
 const ACCOUNT_ID = 1;
@@ -16,6 +17,13 @@ const PRIORITY_ID = 19;
 const IMPACT_ID = 12;
 const URGENCY_ID = 16;
 const SlaID = 0;
+const SlaName = '';
+const IsSlaViolated = false;
+const IsSlaRespondByViolated = false;
+const IsSlaResolveByViolated = false;
+const RespondByDate = null;
+const ResolveByDate = null;
+const SlaBeginDate = null;
 const EstimatedMinutes = 60;
 const StartDate = new Date().toISOString();
 const EndDate = new Date(new Date().setDate(new Date().getDate() + 60)).toISOString(); 
@@ -87,9 +95,9 @@ export async function initiateKbReview(articleIds: string[], requestorUsername: 
             TypeID: TICKET_TYPE_ID,
             FormID: TICKET_FORM_ID,
             Title: `Bimonthly KB Review - ${new Date().toLocaleDateString()}`,
-            Description: 'This ticket is to track the revisions being made in CSS articles that have their eview date expiring between the below dates:<br><br>' +
-                `${new Date().toLocaleDateString()} and ${new Date(new Date().setDate(new Date().getDate() + 60)).toLocaleDateString()}<br><br>` +
-                'Please make sure to update the articles with the latest information and mark the task as complete once done.&nbsp;',
+            Description: 'This ticket is to track the revisions being made in CSS articles that have their review date expiring between the below dates:\n\n' +
+                `${new Date().toLocaleDateString()} and ${new Date(new Date().setDate(new Date().getDate() + 60)).toLocaleDateString()}\n\n` +
+                'Please make sure to update the articles with the latest information and mark the task as complete once done.',
             AccountId: ACCOUNT_ID,
             StatusId: STATUS_ID,
             PriorityId: PRIORITY_ID,
@@ -98,6 +106,13 @@ export async function initiateKbReview(articleIds: string[], requestorUsername: 
             ImpactId: IMPACT_ID,
             UrgencyId: URGENCY_ID,
             SlaID: SlaID,
+            SlaName: SlaName,
+            IsSlaViolated: IsSlaViolated,
+            IsSlaRespondByViolated: IsSlaRespondByViolated,
+            IsSlaResolveByViolated: IsSlaResolveByViolated,
+            RespondByDate: RespondByDate,
+            ResolveByDate: ResolveByDate,
+            SlaBeginDate: SlaBeginDate,
             EstimatedMinutes: EstimatedMinutes,
             StartDate: StartDate,
             EndDate: EndDate
@@ -110,21 +125,21 @@ export async function initiateKbReview(articleIds: string[], requestorUsername: 
         const PreferRequestorAccountAndPriority = false;
         const applyDefaults = true;
 
-        const ticket = await fetchTdx(`/tickets?EnableNotifyReviewer=${EnableNotifyReviewer}&NotifyRequestor=${NotifyRequestor}&NotifyResponsible=${NotifyResponsible}&AllowRequestorCreation=${AllowRequestorCreation}&PreferRequestorAccountAndPriority=${PreferRequestorAccountAndPriority}&applyDefaults=${applyDefaults}`, 'POST', ticketPayload);
+        const ticket = await fetchTdx(`/${TICKET_APP_ID}/tickets?EnableNotifyReviewer=${EnableNotifyReviewer}&NotifyRequestor=${NotifyRequestor}&NotifyResponsible=${NotifyResponsible}&AllowRequestorCreation=${AllowRequestorCreation}&PreferRequestorAccountAndPriority=${PreferRequestorAccountAndPriority}&applyDefaults=${applyDefaults}`, 'POST', ticketPayload);
         const parentTicketId = ticket.ID;
 
         // Create tasks for each article 
         for (const articleId of articleIds) {
             const taskPayload = {
-                Title: `Review KB Article ${articleId}`,
-                Description: `Link to KB Article: https://service.purdue.edu/TDClient/32/Purdue/KB/ArticleDet?ID=${articleId}<br><br>` +
-                    'Ongoing Notes:<br> Please put notes here.&nbsp;',
+                Title: `[Student] Review KB Article ${articleId}`,
+                Description: `Link to KB Article: https://service.purdue.edu/TDClient/32/Purdue/KB/ArticleDet?ID=${articleId}\n\n` +
+                    'Ongoing Notes:\n Please put notes here.',
                 AccountId: ACCOUNT_ID,
                 EstimatedMinutes: EstimatedMinutes,
                 ResponsibleGroupId: 19
             };
 
-            await fetchTdx(`/tickets/${parentTicketId}/tasks`, 'POST', taskPayload);
+            await fetchTdx(`/${TICKET_APP_ID}/tickets/${parentTicketId}/tasks`, 'POST', taskPayload);
         }
 
         return { success: true, message: `Created parent ticket #${parentTicketId} with ${articleIds.length} review tasks.` };
@@ -141,12 +156,8 @@ export async function findMyAppIds() {
         
         console.log("\n--- RAW TEAMDYNAMIX APP DATA ---");
         if (Array.isArray(apps)) {
-            const App = apps.find(app => app.AppClass == 'TDNext');
-            
-            if (App) {
-                console.log(App);
-            } else {
-                console.log("Knowledge Base app not found in the list.");
+            for (const app of apps) {
+                console.log(app);
             }
         }
         console.log("--------------------------------\n");

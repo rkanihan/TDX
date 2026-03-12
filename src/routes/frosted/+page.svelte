@@ -103,6 +103,7 @@
 	{/if}
 
 	<form
+		autocomplete="off"
 		method="POST"
 		action="?/startReview"
 		class="automation-form"
