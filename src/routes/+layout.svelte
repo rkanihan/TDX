@@ -2,7 +2,12 @@
 	let { children } = $props();
 </script>
 
-<svelte:head>
-</svelte:head>
+<style>
+	:global(body) {
+		margin: 0;
+		background-color: #050505;
+		padding: 0;
+	}
+</style>
 
 {@render children()}
