@@ -228,6 +228,8 @@
 	}
 
 	.dashboard-container {
+		zoom: 1;
+
 		background-color: var(--bg-main);
 		color: var(--text-primary);
 		font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -235,13 +237,37 @@
 		min-height: 100vh;
 		display: flex;
 		flex-direction: column;
-		padding-bottom: 120px; 
+		padding-bottom: 100px; 
 		box-sizing: border-box;
 	}
 
+	@media screen and (max-width: 1920px) { 
+ 		.dashboard-container {
+			zoom: 0.75;
+		}
+	}
+
+	@media screen and (min-width: 3840px) {
+		.dashboard-container {
+			zoom: 1.25;
+		}
+	}
+
 	.masthead {
+		animation: slideFadeDown 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 		padding: 3rem 5% 2rem 5%;
 		border-bottom: 1px solid var(--border-light);
+	}
+
+	@keyframes slideFadeDown {
+		0% {
+			opacity: 0;
+			transform: translateY(-20px) scale(0.98);
+		}
+		100% {
+			opacity: 1;
+			transform: translateY(0) scale(1);
+		}
 	}
 
 	.masthead-top {

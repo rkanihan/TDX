@@ -87,7 +87,7 @@ export async function initiateKbReview(articleIds: string[], requestorUsername: 
             TypeID: TICKET_TYPE_ID,
             FormID: TICKET_FORM_ID,
             Title: `Bimonthly KB Review - ${new Date().toLocaleDateString()}`,
-            Description: 'This ticket is to track the revisions beiung made in CSS articles that have their eview date expiring between the below dates:<br><br>' +
+            Description: 'This ticket is to track the revisions being made in CSS articles that have their eview date expiring between the below dates:<br><br>' +
                 `${new Date().toLocaleDateString()} and ${new Date(new Date().setDate(new Date().getDate() + 60)).toLocaleDateString()}<br><br>` +
                 'Please make sure to update the articles with the latest information and mark the task as complete once done.&nbsp;',
             AccountId: ACCOUNT_ID,
@@ -103,7 +103,14 @@ export async function initiateKbReview(articleIds: string[], requestorUsername: 
             EndDate: EndDate
         };
 
-        const ticket = await fetchTdx('/tickets', 'POST', ticketPayload);
+        const EnableNotifyReviewer = false;
+        const NotifyRequestor = false;
+        const NotifyResponsible = false;
+        const AllowRequestorCreation = false;
+        const PreferRequestorAccountAndPriority = false;
+        const applyDefaults = true;
+
+        const ticket = await fetchTdx(`/tickets?EnableNotifyReviewer=${EnableNotifyReviewer}&NotifyRequestor=${NotifyRequestor}&NotifyResponsible=${NotifyResponsible}&AllowRequestorCreation=${AllowRequestorCreation}&PreferRequestorAccountAndPriority=${PreferRequestorAccountAndPriority}&applyDefaults=${applyDefaults}`, 'POST', ticketPayload);
         const parentTicketId = ticket.ID;
 
         // Create tasks for each article 
