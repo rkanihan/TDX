@@ -133,6 +133,8 @@ export async function initiateKbReview(articleIds: string[], requestorUsername: 
             const taskPayload = {
                 Title: `[Student] Review KB Article ${articleId}`,
                 Description: `Link to KB Article: https://service.purdue.edu/TDClient/32/Purdue/KB/ArticleDet?ID=${articleId}\n\n` +
+                    'Please review this task for accuracy and clarity. ADA Compliance can be checked using this KB Article:\n\n' +
+                    'https://service.purdue.edu/TDClient/32/Purdue/KB/ArticleDet?ID=2197\n\n' +
                     'Ongoing Notes:\n Please put notes here.',
                 AccountId: ACCOUNT_ID,
                 EstimatedMinutes: EstimatedMinutes,
