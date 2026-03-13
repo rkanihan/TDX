@@ -1,27 +1,34 @@
 
-import { initiateKbReview, getArticlesDueForReview } from '$lib/server/tdx';
-import type { PageServerLoad, Actions } from './$types';
+import { fail } from '@sveltejs/kit';
 
-export const load: PageServerLoad = async () => {    
-    const articles = await getArticlesDueForReview();
-    
+export const load = async ({ cookies }) => {
+    const token = cookies.get('tdx_token');
     return {
-        articles
+        hasToken: !!token
     };
-}
+};
 
-export const actions: Actions = {
-    startReview: async ({ request }: { request: Request }) => {
+export const actions = {
+    saveToken: async ({ request, cookies }) => {
         const data = await request.formData();
-        const articles = data.getAll('articleIds') as string[];
-        const requestorUsername = data.get('requestorUsername') as string;
-        const responsibleUsername = data.get('responsibleUsername') as string;
-        
-        if (!articles || articles.length === 0) {
-            return { success: false, message: "No articles selected." };
+        const token = data.get('token');
+
+        if (!token || typeof token !== 'string') {
+            return fail(400, { missing: true });
         }
 
-        const result = await initiateKbReview(articles, requestorUsername, responsibleUsername);
-        return result;
+        cookies.set('tdx_token', token, {
+            path: '/',
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+            maxAge: 60 * 60 * 24 
+        });
+
+        return { success: true };
+    },
+    
+    clearToken: async ({ cookies }) => {
+        cookies.delete('tdx_token', { path: '/' });
     }
 };

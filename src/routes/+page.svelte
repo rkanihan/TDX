@@ -1,53 +1,86 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
+	export let data;
+    export let form;
 </script>
 
 <svelte:head>
 	<title>TDX KB Automation | Workspace</title>
 </svelte:head>
 
-<main class="landing-wrapper">
-	<div class="hero">
-		<h1>TDX KB AUTOMATION</h1>
-		<p>Select your preferred workspace.</p>
+{#if !data.hasToken}
+	<div class="token-wrapper">
+		<div class="token-container">
+			<h2>Please enter your token.</h2>
+			<a href="https://service.purdue.edu/TDWebApi/api/auth/loginsso" target="_blank" rel="noopener noreferrer" class="href-style">Where do I get this?</a>
+
+			<form autocomplete="off" method="POST" action="?/saveToken" class="token-form">
+				<input 
+					type="password" 
+					name="token" 
+					placeholder="Bearer Token..." 
+					required 
+					class="input-field"
+				/>
+				<button type="submit" class="submit-btn">Submit Token</button>
+			</form>
+
+			{#if form?.missing}
+				<p class="error">A valid token is required.</p>
+			{/if}
+		</div>
 	</div>
 
-	<div class="selection-grid">
-		<a href="{resolve('/frosted')}" class="choice-card vibe-card">
-			<div class="preview-window vibe-preview">
-				<div class="vibe-nav"></div>
-				<div class="vibe-content">
-					<div class="vibe-box"></div>
-					<div class="vibe-box"></div>
-					<div class="vibe-box"></div>
-					<div class="vibe-box"></div>
-				</div>
-			</div>
-			<div class="card-text">
-				<h2>Frosted Edition</h2>
-				<p>Glassmorphism, ambient glows, rounded buttons. The new standard.</p>
-			</div>
-		</a>
+{:else}
 
-		<a href="{resolve('/ledger')}" class="choice-card ledger-card">
-			<div class="preview-window ledger-preview">
-				<div class="ledger-nav">
-					<div class="ledger-line"></div>
-					<div class="ledger-line"></div>
+	<form autocomplete="off" method="POST" action="?/clearToken">
+        <button type="submit" class="clear-btn">Clear Token</button>
+    </form>
+
+	<main class="landing-wrapper">
+		<div class="hero">
+			<h1>TDX KB AUTOMATION</h1>
+			<p>Select your preferred workspace.</p>
+		</div>
+
+		<div class="selection-grid">
+			<a href="{resolve('/frosted')}" class="choice-card vibe-card">
+				<div class="preview-window vibe-preview">
+					<div class="vibe-nav"></div>
+					<div class="vibe-content">
+						<div class="vibe-box"></div>
+						<div class="vibe-box"></div>
+						<div class="vibe-box"></div>
+						<div class="vibe-box"></div>
+					</div>
 				</div>
-				<div class="ledger-content">
-					<div class="ledger-box"></div><div class="ledger-box"></div>
-					<div class="ledger-box"></div><div class="ledger-box"></div>
-					<div class="ledger-box"></div><div class="ledger-box"></div>
+				<div class="card-text">
+					<h2>Frosted Edition</h2>
+					<p>Glassmorphism, ambient glows, rounded buttons. The new standard.</p>
 				</div>
-			</div>
-			<div class="card-text">
-				<h2 class="mono">LEDGER EDITION</h2>
-				<p class="mono">High-density, rigid grid. Functional visibility.</p>
-			</div>
-		</a>
-	</div>
-</main>
+			</a>
+
+			<a href="{resolve('/ledger')}" class="choice-card ledger-card">
+				<div class="preview-window ledger-preview">
+					<div class="ledger-nav">
+						<div class="ledger-line"></div>
+						<div class="ledger-line"></div>
+					</div>
+					<div class="ledger-content">
+						<div class="ledger-box"></div><div class="ledger-box"></div>
+						<div class="ledger-box"></div><div class="ledger-box"></div>
+						<div class="ledger-box"></div><div class="ledger-box"></div>
+					</div>
+				</div>
+				<div class="card-text">
+					<h2 class="mono">LEDGER EDITION</h2>
+					<p class="mono">High-density, rigid grid. Functional visibility.</p>
+				</div>
+			</a>
+		</div>
+	</main>
+
+{/if}
 
 <style>
 
@@ -60,7 +93,7 @@
 		background-color: #050505;
 		color: #ffffff;
 		font-family: 'Inter', system-ui, sans-serif;
-		min-height: 100vh;
+		min-height: 80vh;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
@@ -68,6 +101,117 @@
 		padding: 2rem;
 		box-sizing: border-box;
 	}
+
+	.href-style {
+		text-decoration: none;
+		color: var(--text-secondary, #aaaaaa);
+        margin-bottom: 1rem;
+		display: block;
+		max-width: fit-content;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	.token-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 80vh;
+        padding: 3rem;
+    }
+
+	.token-container {
+        background: var(--bg-surface, rgba(30, 30, 35, 0.6));
+        backdrop-filter: blur(16px);
+        border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+        border-radius: 16px;
+        padding: 3rem 2.5rem;
+        max-width: 450px;
+        width: 100%;
+        text-align: center;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    }
+
+	.token-container h2 {
+        color: var(--text-primary, #ffffff);
+        margin-bottom: 1.7rem;
+		margin-top: 0;
+        font-weight: 600;
+        letter-spacing: 1px;
+    }
+
+	.token-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+    }
+
+	.input-field {
+        width: 100%;
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid var(--border-color, rgba(255, 255, 255, 0.2));
+        border-radius: 8px;
+        padding: 1rem;
+        color: var(--text-primary, #ffffff);
+        font-size: 1rem;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        box-sizing: border-box;
+    }
+
+	.input-field:focus {
+        outline: none;
+        border-color: var(--text-primary, #ffffff);
+        box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
+    }
+
+	.submit-btn {
+        background: var(--text-primary, #ffffff);
+        color: var(--bg-main, #000000);
+        border: none;
+        border-radius: 8px;
+        padding: 1rem;
+        font-size: 1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+	.submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+        background: #e0e0e0; 
+    }
+
+	.error {
+        color: #ff5555;
+        background: rgba(255, 85, 85, 0.1);
+        border: 1px solid rgba(255, 85, 85, 0.3);
+        padding: 0.75rem;
+        border-radius: 6px;
+        margin-top: 1.25rem;
+        font-size: 0.9rem;
+    }
+
+	.clear-btn {
+        background: transparent;
+        color: var(--text-secondary, #a0a0a0);
+        border: 1px solid var(--border-color, rgba(255, 255, 255, 0.2));
+        border-radius: 6px;
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        margin: 2rem auto 0;
+        display: block;
+    }
+
+    .clear-btn:hover {
+        color: var(--text-primary, #ffffff);
+        border-color: var(--text-primary, #ffffff);
+        background: rgba(255, 255, 255, 0.05);
+    }
 
 	.hero {
 		text-align: center;

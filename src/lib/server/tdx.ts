@@ -1,5 +1,3 @@
-import { TDX_AUTH_TOKEN } from '$env/static/private';
-
 export interface Article {
     ID: number;
     Subject: string;
@@ -28,14 +26,7 @@ const EstimatedMinutes = 60;
 const StartDate = new Date().toISOString();
 const EndDate = new Date(new Date().setDate(new Date().getDate() + 60)).toISOString(); 
 
-
-async function getAuthToken() {
-    return TDX_AUTH_TOKEN;
-}
-
-async function fetchTdx(endpoint: string, method: string, body?: Record<string, unknown>) {
-    const token = await getAuthToken();
-    
+async function fetchTdx(endpoint: string, method: string, token: string, body?: Record<string, unknown>) {
     const res = await fetch(`${TDX_API_BASE_URL}${endpoint}`, {
         method,
         headers: {
@@ -54,7 +45,7 @@ async function fetchTdx(endpoint: string, method: string, body?: Record<string, 
     return text ? JSON.parse(text) : null;
 }
 
-export async function getArticlesDueForReview(): Promise<Article[]> {
+export async function getArticlesDueForReview(token: string): Promise<Article[]> {
     try {
         const searchPayload = { 
             Status: 3,
@@ -63,7 +54,7 @@ export async function getArticlesDueForReview(): Promise<Article[]> {
             IncludeShortcuts: false,
         };
 
-        const results = await fetchTdx('/knowledgebase/search', 'POST', searchPayload);
+        const results = await fetchTdx('/knowledgebase/search', 'POST', token, searchPayload);
 
         console.log("\n--- NUM OF RESULTS ---");
         console.log(results.length);
@@ -82,10 +73,10 @@ export async function getArticlesDueForReview(): Promise<Article[]> {
     }
 }
 
-export async function initiateKbReview(articleIds: string[], requestorUsername: string, responsibleUsername: string) {
+export async function initiateKbReview(articleIds: string[], requestorUsername: string, responsibleUsername: string, token: string) {
     try {
-        const requestorUid = await getGUIDFromUsername(requestorUsername);
-        const responsibleUid = await getGUIDFromUsername(responsibleUsername);
+        const requestorUid = await getGUIDFromUsername(requestorUsername, token);
+        const responsibleUid = await getGUIDFromUsername(responsibleUsername, token);
 
         if (!requestorUid) throw new Error(`Invalid Requestor Username: ${requestorUsername}`);
         if (!responsibleUid) throw new Error(`Invalid Responsible Username: ${responsibleUsername}`);
@@ -125,7 +116,7 @@ export async function initiateKbReview(articleIds: string[], requestorUsername: 
         const PreferRequestorAccountAndPriority = false;
         const applyDefaults = true;
 
-        const ticket = await fetchTdx(`/${TICKET_APP_ID}/tickets?EnableNotifyReviewer=${EnableNotifyReviewer}&NotifyRequestor=${NotifyRequestor}&NotifyResponsible=${NotifyResponsible}&AllowRequestorCreation=${AllowRequestorCreation}&PreferRequestorAccountAndPriority=${PreferRequestorAccountAndPriority}&applyDefaults=${applyDefaults}`, 'POST', ticketPayload);
+        const ticket = await fetchTdx(`/${TICKET_APP_ID}/tickets?EnableNotifyReviewer=${EnableNotifyReviewer}&NotifyRequestor=${NotifyRequestor}&NotifyResponsible=${NotifyResponsible}&AllowRequestorCreation=${AllowRequestorCreation}&PreferRequestorAccountAndPriority=${PreferRequestorAccountAndPriority}&applyDefaults=${applyDefaults}`, 'POST', token, ticketPayload);
         const parentTicketId = ticket.ID;
 
         // Create tasks for each article 
@@ -141,7 +132,7 @@ export async function initiateKbReview(articleIds: string[], requestorUsername: 
                 ResponsibleGroupId: 19
             };
 
-            await fetchTdx(`/${TICKET_APP_ID}/tickets/${parentTicketId}/tasks`, 'POST', taskPayload);
+            await fetchTdx(`/${TICKET_APP_ID}/tickets/${parentTicketId}/tasks`, 'POST', token, taskPayload);
         }
 
         return { success: true, message: `Created parent ticket #${parentTicketId} with ${articleIds.length} review tasks.` };
@@ -152,9 +143,9 @@ export async function initiateKbReview(articleIds: string[], requestorUsername: 
     }
 }
 
-export async function findMyAppIds() {
+export async function findMyAppIds(token: string) {
     try {
-        const apps = await fetchTdx('/applications', 'GET', undefined);
+        const apps = await fetchTdx('/applications', 'GET', token, undefined);
         
         console.log("\n--- RAW TEAMDYNAMIX APP DATA ---");
         if (Array.isArray(apps)) {
@@ -204,9 +195,9 @@ export async function pruneArticles(articles: Record<string, unknown>[]): Promis
     }) as unknown as Article[];
 }
 
-export async function getGUIDFromUsername(username: string) {
+export async function getGUIDFromUsername(username: string, token: string) {
     try {
-        const GUID = await fetchTdx(`/people/getuid/${encodeURIComponent(username)}`, 'GET', undefined);
+        const GUID = await fetchTdx(`/people/getuid/${encodeURIComponent(username)}`, 'GET', token, undefined);
 
         console.log(`GUID for ${username}: ${GUID}`);
 
@@ -217,9 +208,9 @@ export async function getGUIDFromUsername(username: string) {
     }
 }
 
-export async function getTicket(ticketId: number) {
+export async function getTicket(ticketId: number, token: string) {
     try { 
-        const ticket = await fetchTdx(`/tickets/${ticketId}`, 'GET', undefined);
+        const ticket = await fetchTdx(`/tickets/${ticketId}`, 'GET', token, undefined);
 
         console.log(`Fetched ticket #${ticketId}:`, ticket);
 
