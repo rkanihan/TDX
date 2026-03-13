@@ -12,7 +12,7 @@
 	<div class="token-wrapper">
 		<div class="token-container">
 			<h2>Please enter your token.</h2>
-			<a href="https://service.purdue.edu/TDWebApi/api/auth/loginsso" target="_blank" rel="noopener noreferrer" class="href-style">Where do I get this?</a>
+			<a href="https://service.purdue.edu/TDWebApi/api/auth/loginsso" target="_blank" rel="noopener noreferrer" class="token-link">Where do I get this?</a>
 
 			<form autocomplete="off" method="POST" action="?/saveToken" class="token-form">
 				<input 
@@ -102,7 +102,7 @@
 		box-sizing: border-box;
 	}
 
-	.href-style {
+	.token-link {
 		text-decoration: none;
 		color: var(--text-secondary, #aaaaaa);
         margin-bottom: 1rem;
@@ -126,7 +126,7 @@
         border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
         border-radius: 16px;
         padding: 3rem 2.5rem;
-        max-width: 450px;
+        max-width: 525px;
         width: 100%;
         text-align: center;
         box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
@@ -134,11 +134,31 @@
 
 	.token-container h2 {
         color: var(--text-primary, #ffffff);
+		font-size: 3rem;
         margin-bottom: 1.7rem;
 		margin-top: 0;
-        font-weight: 600;
-        letter-spacing: 1px;
+        font-weight: 800;
+        letter-spacing: -0.06rem;
+		line-height: 1;
+
+		font-family:
+			'Inter',
+			system-ui,
+			-apple-system,
+			sans-serif;
     }
+
+	.token-container a {
+		font-size: 1.35rem;
+		color: var(--text-secondary, #aaaaaa);
+		text-decoration: none;
+
+		font-family:
+			'Inter',
+			system-ui,
+			-apple-system,
+			sans-serif;
+	}
 
 	.token-form {
         display: flex;
@@ -169,13 +189,19 @@
         color: var(--bg-main, #000000);
         border: none;
         border-radius: 8px;
-        padding: 1rem;
-        font-size: 1rem;
+        padding: 0.8rem;
+        font-size: 1.25rem;
         font-weight: 700;
         cursor: pointer;
         transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
         text-transform: uppercase;
         letter-spacing: 1px;
+
+		font-family:
+			'Inter',
+			system-ui,
+			-apple-system,
+			sans-serif;
     }
 
 	.submit-btn:hover {

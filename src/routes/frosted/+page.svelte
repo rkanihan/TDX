@@ -206,7 +206,7 @@
 		min-height: 100dvh;
 		display: flex;
 		flex-direction: column;
-		padding-bottom: 160px; /* space for the floating bar */
+		padding-bottom: 160px;
 	}
 
 	.hero {
