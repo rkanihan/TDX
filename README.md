@@ -30,13 +30,7 @@ cd TDX
 pnpm install
 ```
 
-### 3. Authentication Configuration (Local Dev)
-Currently, the application uses a manual browser token for local development. 
-1. Log into `https://service.purdue.edu`.
-2. Navigate to `https://service.purdue.edu/TDWebApi/api/auth/loginsso` to retrieve your active bearer token.
-3. Open `.env` at the root of /TDX and paste the token into `TDX_AUTH_TOKEN`. *(Note: This token expires periodically and will need to be refreshed during development).*
-
-### 4. Running the App
+### 3. Running the App
 Start the SvelteKit development server:
 ```bash
 pnpm run dev
