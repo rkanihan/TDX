@@ -3,6 +3,7 @@ export interface Article {
     Subject: string;
     ReviewDateUtc: string;
     OwningGroupName: string;
+    CreatedFullName: string;
 }
 
 const TDX_API_BASE_URL = "https://service.purdue.edu/TDWebApi/api";
@@ -106,7 +107,44 @@ export async function initiateKbReview(articleIds: string[], requestorUsername: 
             SlaBeginDate: SlaBeginDate,
             EstimatedMinutes: EstimatedMinutes,
             StartDate: StartDate,
-            EndDate: EndDate
+            EndDate: EndDate,
+            Attributes: [
+                {
+                    ID: 2016,
+                    Name: 'Purdue IT Service',
+                    Order: 0,
+                    Description: '',
+                    SectionID: 0,
+                    SectionName: null,
+                    FieldType: 'dropdown',
+                    DataType: 'String',
+                    Choices: [Array],
+                    IsRequired: false,
+                    IsUpdatable: true,
+                    Value: '33',
+                    ValueText: 'Collaboration',
+                    ChoicesText: 'Collaboration',
+                    AssociatedItemIDs: [Array]
+                },
+
+                {
+                    ID: 2017,
+                    Name: 'Product',
+                    Order: 0,
+                    Description: '',
+                    SectionID: 0,
+                    SectionName: null,
+                    FieldType: 'dropdown',
+                    DataType: 'String',
+                    Choices: [Array],
+                    IsRequired: false,
+                    IsUpdatable: true,
+                    Value: '371',
+                    ValueText: 'Unlisted',
+                    ChoicesText: 'Unlisted',
+                    AssociatedItemIDs: [Array]
+                }
+            ]
         };
 
         const EnableNotifyReviewer = false;

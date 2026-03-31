@@ -20,6 +20,10 @@
 			day: '2-digit'
 		}).replace(/\//g, '.'); 
 	}
+
+	function normalizeCreatedBy(name: string) {
+		return name.trim();
+	}
 </script>
 
 <label class="article-cell" in:fly|global={{ y: 50, duration: 600, delay: distance * 60 }}>
@@ -32,6 +36,8 @@
 		</div>
 		
 		<div class="col-title">{article.Subject}</div>
+
+		<div class="col-name mono">{normalizeCreatedBy(article.CreatedFullName)}</div>
 		
 		<div class="col-due mono">DUE: {formatReadableDate(article.ReviewDateUtc as string)}</div>
 	</div>
@@ -52,7 +58,7 @@
 	.cell-content {
 		display: flex;
 		flex-direction: column;
-		padding: 1.5rem;
+		padding: 1.2rem;
 		min-height: 180px; 
 		box-sizing: border-box;
 		height: 100%;
@@ -67,7 +73,7 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		margin-bottom: 1rem;
+		margin-bottom: 0.8rem;
 	}
 
 	.article-cell:hover .cell-content {
@@ -103,8 +109,13 @@
 		font-weight: 500;
 		font-size: 1.1rem;
 		line-height: 1.4;
-		margin-bottom: 1.5rem;
+		margin-bottom: 0.8rem;
 		white-space: normal; 
+	}
+
+	.col-name {
+		margin-top: auto;
+		margin-bottom: 0.8rem; 
 	}
 	
 	.col-due {

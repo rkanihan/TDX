@@ -20,6 +20,7 @@
 	<div class="card-inner">
 		<div class="card-header">
 			<span class="article-id">ID {article.ID}</span>
+			<span class="creator-name mono">{article.CreatedFullName.trim()}</span>
 			<span class="due-date">Due: {formatReadableDate(article.ReviewDateUtc as string)}</span>
 		</div>
 		<h3 class="article-title">{article.Subject}</h3>
